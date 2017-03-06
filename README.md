@@ -2,18 +2,14 @@
 
 A simple flask framework, for B/S web application.
 
-### Module
+### Function
 
+* Background management system
 
-* Flask
- 
-* Flask-Admin        # Background management system
+* Enable Cors support on all routes, for all origins and methods. 
 
-* Flask-Cors         # CRSF
+* SQL-database frendly Supported
 
-* Flask-SQLAlchemy   # SQLAlchemy extension
-
-* pymysql            # Support MySQL database (if you want)
 
 ### Quick start
 
