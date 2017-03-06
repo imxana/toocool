@@ -8,7 +8,7 @@ A simple flask framework, for B/S web application.
 
 * Enable Cors support on all routes, for all origins and methods. 
 
-* SQL-database frendly Supported
+* SQL-database friendly Supported
 
 
 ### Quick start
