@@ -5,8 +5,8 @@ from flask import request, json, jsonify, render_template
 def register(app):
 
     # print the request info
-    @app.route('/test/', methods=['GET', 'POST'])
-    @app.route('/test/<key>', methods=['GET', 'POST'])
+    @app.route('/api/test/', methods=['GET', 'POST'])
+    @app.route('/api/test/<key>', methods=['GET', 'POST'])
     def api_test(key='world'):
         if key == 'api':
             msg = {

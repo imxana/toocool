@@ -39,10 +39,10 @@ def register(app):
 
 
 
-
     # Models defined here
 
     class User(db.Model):
+        __tablename__ = 'user'
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String(80), unique=True)
         password = db.Column(db.String(20))
@@ -56,6 +56,20 @@ def register(app):
         def __repr__(self):
             return '<User %r>' % self.username
 
+    class Item(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(50))
+        url = db.Column(db.String(200))
+        param = db.Column(db.String(2000), nullable=True)
+        create_time = db.Column(db.DateTime)
+        del_status = db.Column(db.Boolean, default=False)
+
+        def __init__(self, name, url, param=None):
+            self.name = name
+            self.url = url
+            self.create_time = datetime.utcnow()
+            if param:
+                self.param = param
 
     class Post(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -106,14 +120,16 @@ def register(app):
         # can_delete = False  # disable model deletion
         pass
 
-
     class PostView(GlobalView):
         page_size = 50  # the number of entries to display on the list view
+
+
+    admin.add_view(GlobalView(Item, db.session))
+
 
     admin.add_view(UserView(User, db.session))
     admin.add_view(PostView(Post, db.session))
     admin.add_view(GlobalView(Category, db.session))
-
 
 
 
@@ -127,14 +143,10 @@ def register(app):
         g.User = User
         g.Post = Post
         g.Category = Category
+        g.Item = Item
 
-    # @app.teardown_request
-    # def teardown_request():
-        # db = getattr(g, 'db', None)
-        # if db is not None:
-            # db.close()
-            # db = None
-        # getattr(g,'User',None)=None
-        # getattr(g,'Post',None)=None
-
+    @app.teardown_request
+    def teardown_request(exception=None):
+        for name in ['db', 'User', 'Post', 'Category', 'Item']:
+            delattr(g, name)
 

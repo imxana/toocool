@@ -2,6 +2,10 @@
 *.sqlite
 *.db
 note/
+.idea/
+
+# virtualenv
+toocool/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
