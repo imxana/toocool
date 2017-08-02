@@ -106,6 +106,49 @@ def register(app):
 
 
 
+
+    # the docs descript
+
+    class PictureList(db.Model):
+        """docstring for PictureList."""
+        pictureId = db.Column(db.Integer, primary_key=True)
+        pictureUrl = db.Column(db.String(300))
+        filterValue = db.Column(db.String(1000))
+        posterValue = db.Column(db.String(1000))
+        styleId = db.Column(db.Integer)
+        createTime = db.Column(db.DateTime)
+
+        def __init__(self, pu, fv, pv, si, ct=None):
+            super(PictureList, self).__init__()
+            # self.arg = arg
+            self.pictureUrl = pu
+            self.filterValue = fv
+            self.posterValue = pv
+            self.styleId = si
+            if ct is None:
+                ct = datetime.utcnow()
+            self.createTime = ct
+
+    class StyleList(db.Model):
+        """docstring for StyleList."""
+        styleId = db.Column(db.Integer, primary_key=True)
+        styleName = db.Column(db.String(50))
+        styleImgUrl = db.Column(db.String(300))
+        originImgUrl = db.Column(db.String(300))
+        resultImgUrl = db.Column(db.String(300))
+        isSystemDefault = db.Column(db.Boolean)
+        createTime = db.Column(db.DateTime)
+
+        def __init__(self, sn, siu, oiu, riu, isd=False, ct=None):
+            super(StyleList, self).__init__()
+            self.styleName = sn
+            self.styleImgUrl = siu
+            self.originImgUrl = oiu
+            self.resultImgUrl = riu
+            self.isSystemDefault = isd
+            if ct is None:
+                ct = datetime.utcnow()
+            self.createTime = ct
     # Flask-admin initialization here
 
     admin = Admin(app, name='Admin', template_mode='bootstrap3')
@@ -136,7 +179,7 @@ def register(app):
 
 
     # Request Lifecycle
-    
+
     @app.before_request
     def before_request():
         g.db = db
@@ -149,4 +192,3 @@ def register(app):
     def teardown_request(exception=None):
         for name in ['db', 'User', 'Post', 'Category', 'Item']:
             delattr(g, name)
-

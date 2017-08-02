@@ -15,8 +15,10 @@ qiniu_setting = {
 def register(app):
 
     @app.route('/api/image/upload', methods=['POST'])
+
     def image_upload():
         """
+        get callback from qiniu, so no error will occur
         'callbackBody':'filename=$(fname)&filesize=$(fsize)'
         """
         filename = request.values.get('filename', '')

@@ -24,7 +24,7 @@ def register(app):
             return redirect(url_for('index'))
         return '''
             <form action="" method="post">
-                <p><input type=text name=username>
+                <p><input type=text name=username placeholder='username'>
                 <p><input type=submit value=Login>
             </form>
         '''
@@ -34,10 +34,3 @@ def register(app):
         # remove the username from the session if it's there
         session.pop('username', None)
         return redirect(url_for('index'))
-
-
-
-
-
-
-
