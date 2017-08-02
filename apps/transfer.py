@@ -84,14 +84,14 @@ def register_calculate(app):
     @app.route('/tasks/pop/')
     def task_pop():
         if tasks:
-            return jsonify(tasks.pop())
+            return jsonify(tasks.pop(0))
         return jsonify('Empty')
 
 
     @app.route('/tasks/callback/', methods=['POST'])
     def task_cb():
         """callback from qiniu"""
-        qiniu_setting = qiniu_setting = {
+        qiniu_setting = {
             'access_key' : 'iQ3ndG5uRpwdeln_gcrH3iiZ7E3KbMdJVkdYV9Im',
             'secret_key' : 'AGsp6K7fu1NsH2DnsPi7hW3qa3JXb4dtfeGvkm-A',
             'bucket_name' : 'image',
@@ -100,6 +100,9 @@ def register_calculate(app):
             'callbackBody' : 'filename:$(fname)'
         }
         filename = request.values.get('filename', '')
-        url  = qiniu_setting + filename
+        url  = qiniu_setting['bucket_domain'] + filename
+        done.append({
+            'url':url,
+        })
 
         return  url
