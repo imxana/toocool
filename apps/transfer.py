@@ -1,5 +1,6 @@
 # coding=utf-8
 from flask import request, jsonify, g
+import random
 
 
 def register_front(app):
@@ -59,19 +60,28 @@ def register_front(app):
             'processImgUrl': 'iii'
         })
 
-
+tasks = []
+done = []
 
 def register_calculate(app):
-    import random
-    tasks = []
-    done = []
 
+    @app.route('/tasks/add/model/')
+    def add_model():
+        task = {
+            'url':'https://oi3qt7c8d.qnssl.com/res.jpg',
+            'type':'model',
+            'model':'mosaic',
+        }
+        tasks.append(task)
+        return jsonify(task)
 
     @app.route('/tasks/add/')
     def add_task():
-        tasks.append({'id':random.randint(10001, 99999)})
+        ID = random.randint(10001, 99999)
+        tasks.append({'id':ID})
         return jsonify({
-            'code':1
+            'code':1,
+            'id':ID
         })
 
     @app.route('/tasks/query/')
@@ -96,11 +106,13 @@ def register_calculate(app):
             'secret_key' : 'AGsp6K7fu1NsH2DnsPi7hW3qa3JXb4dtfeGvkm-A',
             'bucket_name' : 'image',
             'bucket_domain' : 'https://oi3qt7c8d.qnssl.com/',
-            'callbakUrl' : 'http://139.129.24.151/tasks/callback',
+            'callbakUrl' : 'http://139.129.24.151/tasks/callback/',
             'callbackBody' : 'filename:$(fname)'
         }
         filename = request.values.get('filename', '')
+        imageInfo = request.values.get('imageInfo', '')
         url  = qiniu_setting['bucket_domain'] + filename
+        print(filename, url, imageInfo)
         done.append({
             'url':url,
         })
