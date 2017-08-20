@@ -8,19 +8,19 @@ api若有出入以 apps/transfer.py 为准
 
 ## 与客户端
 
-* [添加用户 ./api/user/add/](##添加用户-apiuseradd)
-* [查询用户 ./api/user/query/](##查询用户-apiuserquery)
-* [用户关注 ./api/user/follow/](##用户关注-apiuserfollow)
-* [添加处理任务 ./api/tasks/add/](##添加处理任务-apitasksadd)
-* [图片信息上传（不使用七牛回调） ./api/image/addinfo/](##图片信息上传（不使用七牛回调）-apiimageaddinfo)
+* [添加用户 ./api/user/add/](#添加用户-apiuseradd)
+* [查询用户 ./api/user/query/](#查询用户-apiuserquery)
+* [用户关注 ./api/user/follow/](#用户关注-apiuserfollow)
+* [添加处理任务 ./api/tasks/add/](#添加处理任务-apitasksadd)
+* [图片信息上传（不使用七牛回调） ./api/image/addinfo/](#图片信息上传（不使用七牛回调）-apiimageaddinfo)
 
 
 # 与计算端 (cpu服务器)
 
 
-* [上传图片](##上传图片)
-* [下载图片](##下载图片)
-* [图片查询 ./api/image/query/](图片查询-apiimagequery)
+* [上传图片](#上传图片)
+* [下载图片](#下载图片)
+* [图片查询 ./api/image/query/](#图片查询-apiimagequery)
 
 # 与客户端（WebAPP）
 
