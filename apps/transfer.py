@@ -1,27 +1,128 @@
 # coding=utf-8
 from flask import request, jsonify, g
+from flask_sqlalchemy import SQLAlchemy
 import random
+
+tasks = []
+done = []
 
 
 def register_front(app):
 
+    db = SQLAlchemy(app)
     # users = cur = g.Post.query.all()
 
-    @app.route('/api/user/signup/', methods=['GET', 'POST'])
+    @app.route('/api/user/add/', methods=['GET', 'POST'])
     def signup():
-        cur = g.User.query.filter_by(username='admin').filter_by(password='123').first()
-        return jsonify(str(cur))
+        username = request.values.get('username', '')
+        password = request.values.get('password', '')
+        email = request.values.get('email', '')
 
-        return jsonify({'code':[ dict(un=row.username, ps=row.password) for row in cur] })
+        # cur = g.User.query.filter_by(username='admin').filter_by(password='123')
+        ex = g.User.query.filter_by(del_status=False)
+        user = ex.filter_by(username=username).first() or ex.filter_by(email=email).first()
+        if user:
+            return jsonify({ 'code': -2 })
 
-    @app.route('/api/user/signin/', methods=['GET', 'POST'])
+        user = db.User(username=username, email=email, psw=password)
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify({ 'code': 1 })
+        # return jsonify({'code':[ dict(un=row.username, ps=row.password) for row in cur] })
+
+    @app.route('/api/user/query/', methods=['GET', 'POST'])
     def signin():
-        cur = g.User.query.all()
-        return jsonify({'code':[ dict(un=row.username, ps=row.password) for row in cur] })
+        # cur = g.User.query.all()
+        username = request.values.get('username', '')
+        password = request.values.get('password', '')
+        user = g.User.query.filter_by(del_status=False, username=username).first()
+        if not user:
+            return jsonify({ 'code': -1 })
 
-    @app.route('/api/user/', methods=['GET', 'POST'])
-    def a():
-        pass
+        fw = [i.to_user.username for i in g.FollowUser.query.filter_by(del_status=False, from_user_id=user.id).all()]
+        fd = [i.from_user.username for i in g.FollowUser.query.filter_by(del_status=False, to_user_id=user.id).all()]
+
+        res = {
+            'code': 1,
+            'username': user.username,
+            'email': user.email,
+            'login': False,
+            'follow_user': fw,
+            'followed_user': fd,
+        }
+        res_secret = {
+            'login': True,
+            'id': user.id,
+        }
+        if user and user.password == password:
+            res.update(res_secret)
+
+        return jsonify(res)
+
+
+        # return jsonify({'code':[ dict(un=row.username, ps=row.password) for row in cur] })
+
+    @app.route('/api/user/follow/', methods=['GET', 'POST'])
+    def follow_user():
+        from_user_name = request.values.get('from_user_name', '')
+        to_user_name = request.values.get('to_user_name', '')
+        follow_bool = request.values.get('follow_bool', '1')  # 1 or 0
+
+        from_user = g.User.query.filter_by(username=from_user_name).first()
+        to_user = g.User.query.filter_by(username=to_user_name).first()
+        if not (from_user and to_user):
+            return jsonify({ 'code': -1 })
+
+        args = {
+            'from_user_id': from_user.id,
+            'to_user_id': to_user.id,
+        }
+
+        follow = g.FollowUser.query.filter_by(**args).first()
+        want_to_follow = bool(int(follow_bool))
+        if follow:
+            follow.del_status = not want_to_follow
+        elif want_to_follow:
+            follow = g.FollowUser(**args)
+        db.session.add(follow)
+        db.session.commit()
+
+        return jsonify({ 'code': 1 })
+
+
+    @app.route('/api/image/addinfo/', methods=['GET', 'POST'])
+    def image_info():
+        kwargs = {
+            'url': request.values.get('url', ''),
+            'filename': request.values.get('filename', ''),
+            'param': request.values.get('param', '')
+        }
+        user_id = request.values.get('user_id', '')
+        if user_id:
+            kwargs.update({ 'user_id': user_id })
+
+        item = g.Item.query.filter_by(name=filename).first()
+        if item:
+            return jsonify({'code': '-2'})
+
+        item = g.Item(**kwargs)
+        g.db.session.add(item)
+        g.db.session.commit()
+
+        return jsonify({ 'code': 1 })
+
+
+    @app.route('/api/tasks/add/', methods=['GET', 'POST'])
+    def add_task():
+        """add task to a queue"""
+        task = {
+            'url': request.values.get('url', ''),
+            'type': request.values.get('type', 'model'),
+            'model': request.values.get('model', 'mosaic'),
+        }
+        tasks.append(task)
+        return jsonify({ 'code': 1, 'task':task })
 
     # @app.route('/defaultstyles/')
     # def defaultstyles():
@@ -78,8 +179,7 @@ def register_front(app):
     #         'processImgUrl': 'iii'
     #     })
 
-tasks = []
-done = []
+
 
 def register_calculate(app):
 

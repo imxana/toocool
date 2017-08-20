@@ -59,17 +59,30 @@ def register(app):
         def __repr__(self):
             return '<User %r>' % self.username
 
+        # def get_items(self):
+        #     return self.items.all()
+
 
     class FollowUser(db.Model):
         __tablename__ = 'follow_user'
         id = db.Column(db.Integer, primary_key=True)
 
-        from_user_id = db.Column(db.Integer,  db.ForeignKey('user.id'))
-        to_user_id = db.Column(db.Integer,  db.ForeignKey('user.id'))
+        from_user_id = db.Column(db.Integer)#,  db.ForeignKey('user.id'))
+        to_user_id = db.Column(db.Integer)#,  db.ForeignKey('user.id'))
 
         del_status = db.Column(db.Boolean, default=False)
 
+        @property
+        def from_user(self):
+            return g.User.query.filter_by(del_status=False, id=self.from_user_id).first()
 
+        @property
+        def to_user(self):
+            return g.User.query.filter_by(del_status=False, id=self.to_user_id).first()
+
+        def __init__(self, to_user_id, from_user_id):
+            self.from_user_id = from_user_id
+            self.to_user_id = to_user_id
 
 
     class Item(db.Model):
@@ -85,12 +98,10 @@ def register(app):
         create_time = db.Column(db.DateTime)
         del_status = db.Column(db.Boolean, default=False)
 
-        def __init__(self, name, url, user=None, user_id=None, param=None):
+        def __init__(self, name, url, user_id=None, param=None):
             self.name = name
             self.url = url
             self.create_time = datetime.utcnow()
-            if user:
-                self.user = user
             if user_id:
                 self.user_id = user_id
             if param:
@@ -192,9 +203,10 @@ def register(app):
         page_size = 50  # the number of entries to display on the list view
 
 
-    admin.add_view(GlobalView(Item, db.session))
-
     admin.add_view(UserView(User, db.session))
+    admin.add_view(GlobalView(FollowUser, db.session))
+
+    admin.add_view(GlobalView(Item, db.session))
     # admin.add_view(PostView(Post, db.session))
     # admin.add_view(GlobalView(Category, db.session))
 
@@ -211,9 +223,10 @@ def register(app):
         # g.Post = Post
         # g.Category = Category
         g.Item = Item
+        g.FollowUser = FollowUser
 
-    @app.teardown_request
-    def teardown_request(exception=None):
-        arr = ['db', 'User', 'Item']#['db', 'User', 'Post', 'Category', 'Item']
-        for name in arr:
-            delattr(g, name)
+    # @app.teardown_request
+    # def teardown_request(exception=None):
+    #     arr = ['db', 'User', 'Item']#['db', 'User', 'Post', 'Category', 'Item']
+    #     for name in arr:
+    #         delattr(g, name)
