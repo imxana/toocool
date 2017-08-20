@@ -14,7 +14,7 @@ qiniu_setting = {
 
 def register(app):
 
-    @app.route('/api/image/upload', methods=['POST'])
+    @app.route('/api/image/upload/', methods=['POST'])
 
     def image_upload():
         """
@@ -43,7 +43,7 @@ def register(app):
             'param': param,
             })
 
-    @app.route('/api/image/query', methods=['GET'])
+    @app.route('/api/image/query/', methods=['GET'])
     def image_query():
         id = request.args.get('id', '')
         name = request.args.get('name', '')
