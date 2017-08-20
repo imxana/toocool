@@ -114,7 +114,7 @@ def register_front(app):
 
 
     @app.route('/api/tasks/add/', methods=['GET', 'POST'])
-    def add_task():
+    def add_image_task():
         """add task to a queue"""
         task = {
             'url': request.values.get('url', ''),

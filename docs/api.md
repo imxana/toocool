@@ -4,10 +4,28 @@
 
 api若有出入以 apps/transfer.py 为准
 
+# 目录
+
+## 与客户端
+
+* [添加用户 ./api/user/add/](##添加用户-apiuseradd)
+* [查询用户 ./api/user/query/](##查询用户-apiuserquery)
+* [用户关注 ./api/user/follow/](##用户关注-apiuserfollow)
+* [添加处理任务 ./api/tasks/add/](##添加处理任务-apitasksadd)
+* [图片信息上传（不使用七牛回调） ./api/image/addinfo/](##图片信息上传（不使用七牛回调）-apiimageaddinfo)
+
+
+# 与计算端 (cpu服务器)
+
+
+* [上传图片](##上传图片)
+* [下载图片](##下载图片)
+* [图片查询 ./api/image/query/](图片查询-apiimagequery)
+
 # 与客户端（WebAPP）
 
 
-## 添加用户 /api/user/add/
+## 添加用户 ./api/user/add/
 
 参数|类型或值
 ------------ | -------------
@@ -22,7 +40,7 @@ return
 code | 1或-2
 
 
-## 查询用户 /api/user/query/
+## 查询用户 ./api/user/query/
 
 参数|类型或值
 ------------ | -------------
@@ -41,6 +59,7 @@ follow_user | 用户名字符串数组
 followed_user | 用户名字符串数组
 
 密码正确额外信息：
+
 字段|类型或值
 ------------ | -------------
 login | true
@@ -52,7 +71,7 @@ fail:
 ------------ | -------------
 code | <1
 
-## 用户关注 /api/user/follow/
+## 用户关注 ./api/user/follow/
 
 参数|类型或值
 ------------ | -------------
@@ -66,7 +85,7 @@ return
 ------------ | -------------
 code | 1或-1
 
-## 图片信息上传（不使用七牛回调） /api/image/addinfo/
+## 图片信息上传（不使用七牛回调） ./api/image/addinfo/
 
 参数|类型或值
 ------------ | -------------
@@ -81,7 +100,7 @@ return
 ------------ | -------------
 code | 1或-1
 
-## 添加处理任务 /api/tasks/add/
+## 添加处理任务 ./api/tasks/add/
 
 参数|类型或值
 ------------ | -------------
@@ -96,7 +115,7 @@ return
 ------------ | -------------
 code | 1
 
-## 查看当前任务情况 /tasks/query/ （测试用，维护中）
+## 查看当前任务情况 ./tasks/query/ （测试用，维护中）
 
 参数|类型或值
 ------------ | -------------
